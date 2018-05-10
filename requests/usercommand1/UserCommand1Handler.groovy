@@ -16,6 +16,13 @@ import groovy.json.JsonSlurper
 class UserCommand1Handler extends AbstractHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserCommand1Handler.class);
 
+    private static final RESTART = "restart";
+    private static final RESTART3 = "restart3";
+    private static final RESTART5 = "restart5";
+    private static final SHUTDOWN1_10 = "shutdown1_1";
+    private static final SHUTDOWN3_30 = "shutdown3_3";
+    private static final SHUTDOWN5_60 = "shutdown5_6";
+
     def executeOnShell(String command) {
         return executeOnShell(command, new File(System.properties.'user.dir'))
     }
@@ -42,25 +49,89 @@ class UserCommand1Handler extends AbstractHandler {
         return commandArray
     }
 
+    def executeCommand(String command) {
+        if (executeOnShell(command) != 0) {
+            logger.warn("Unable to execute the user's command: " + command)
+            this.getClient().notifyFailure("Unable to execute user's command: " + command)
+
+            return null
+        }
+        this.getClient().notifySuccess("Agent executed command successfully")
+        logger.info("Agent executed command successfully")
+    }
+
     @Override
     Object handle() {
         String logDir = System.getProperty("maestro.log.dir")
+        int sleepTime = 0;
+        String command = "";
 
         logger.info("Erasing old data")
         "rm -rf ${logDir}/agent".execute();
 
         UserCommand1Request request = (UserCommand1Request) getNote()
-        String command = request.getPayload()
+        String payload = request.getPayload()
 
         try {
-            if (executeOnShell(command) != 0) {
-                logger.warn("Unable to execute the user's command: " + command)
-                this.getClient().notifyFailure("Unable to execute user's command: " + command)
 
-                return null
+            switch(payload) {
+              case RESTART
+                  logger.info("Going to execute restart command")
+                  command = "systemctl restart qdrouterd"
+                  executeCommand(command);
+
+              break
+              case RESTART3:
+                  logger.info("Going to execute restart command after 180 seconds")
+                  command = "systemctl restart qdrouterd"
+                  sleep(180);
+                  executeCommand(command);
+
+              break
+              case RESTART5:
+                  logger.info("Going to execute restart command after 300 seconds")
+                  command = "systemctl restart qdrouterd"
+                  sleep(300);
+                  executeCommand(command);
+
+              break
+              case SHUTDOWN1_10:
+                  logger.info("Going to execute stop command after 60 seconds")
+                  command = "systemctl stop qdrouterd"
+                  sleep(60);
+                  executeCommand(command);
+                  logger.info("Going to execute start command after 10 seconds")
+                  sleep(10)
+                  command = "systemctl start qdrouterd"
+                  executeCommand(command);
+
+              break
+              case SHUTDOWN3_30:
+                  logger.info("Going to execute stop command after 180 seconds")
+                  command = "systemctl stop qdrouterd"
+                  sleep(180);
+                  executeCommand(command);
+                  logger.info("Going to execute start command after 30 seconds")
+                  sleep(30)
+                  command = "systemctl start qdrouterd"
+                  executeCommand(command);
+
+              break
+              case SHUTDOWN5_60:
+                  logger.info("Going to execute stop command after 300 seconds")
+                  command = "systemctl stop qdrouterd"
+                  sleep(300);
+                  executeCommand(command);
+                  logger.info("Going to execute start command after 60 seconds")
+                  sleep(60)
+                  command = "systemctl start qdrouterd"
+                  executeCommand(command);
+
+              break
+              default:
+
+              break
             }
-            this.getClient().notifySuccess("Agent executed command successfully")
-            logger.info("Agent executed command successfully")
         }
         return null
     }
