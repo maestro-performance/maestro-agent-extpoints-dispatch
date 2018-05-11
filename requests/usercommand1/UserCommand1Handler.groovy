@@ -75,7 +75,7 @@ class UserCommand1Handler extends AbstractHandler {
         try {
 
             switch(payload) {
-              case RESTART
+              case RESTART:
                   logger.info("Going to execute restart command")
                   command = "systemctl restart qdrouterd"
                   executeCommand(command);
