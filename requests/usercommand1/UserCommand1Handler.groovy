@@ -73,7 +73,6 @@ class UserCommand1Handler extends AbstractHandler {
         String payload = request.getPayload()
 
         try {
-
             switch(payload) {
               case RESTART:
                   logger.info("Going to execute restart command")
@@ -132,6 +131,9 @@ class UserCommand1Handler extends AbstractHandler {
 
               break
             }
+        }
+        finally{
+            logger.info("Finish user command handler")
         }
         return null
     }
