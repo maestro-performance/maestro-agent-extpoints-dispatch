@@ -6,6 +6,6 @@ class NotifySuccessHandler extends AbstractHandler {
 
     @Override
     Object handle() {
-        return null
+         this.getClient().notifySuccess("Agent executed command successfully")
     }
 }
