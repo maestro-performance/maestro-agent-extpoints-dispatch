@@ -52,11 +52,11 @@ class UserCommand1Handler extends AbstractHandler {
     def executeCommand(String command) {
         if (executeOnShell(command) != 0) {
             logger.warn("Unable to execute the user's command: " + command)
-            // this.getClient().notifyFailure("Unable to execute user's command: " + command)
+            this.getClient().notifyFailure("Unable to execute user's command: " + command)
 
             return null
         }
-        // this.getClient().notifySuccess("Agent executed command successfully")
+        this.getClient().notifySuccess("Agent executed command successfully")
         logger.info("Agent executed command successfully")
     }
 
