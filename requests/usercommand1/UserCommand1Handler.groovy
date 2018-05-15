@@ -52,11 +52,11 @@ class UserCommand1Handler extends AbstractHandler {
     def executeCommand(String command) {
         if (executeOnShell(command) != 0) {
             logger.warn("Unable to execute the user's command: " + command)
-            this.getClient().notifyFailure("Unable to execute user's command: " + command)
+            // this.getClient().notifyFailure("Unable to execute user's command: " + command)
 
             return null
         }
-        this.getClient().notifySuccess("Agent executed command successfully")
+        // this.getClient().notifySuccess("Agent executed command successfully")
         logger.info("Agent executed command successfully")
     }
 
@@ -76,54 +76,54 @@ class UserCommand1Handler extends AbstractHandler {
             switch(payload) {
               case RESTART:
                   logger.info("Going to execute restart command")
-                  command = "systemctl restart qdrouterd"
+                  command = "sudo systemctl restart qdrouterd"
                   executeCommand(command);
 
               break
               case RESTART3:
                   logger.info("Going to execute restart command after 180 seconds")
-                  command = "systemctl restart qdrouterd"
-                  sleep(180);
+                  command = "sudo systemctl restart qdrouterd"
+                  sleep(180000);
                   executeCommand(command);
 
               break
               case RESTART5:
                   logger.info("Going to execute restart command after 300 seconds")
-                  command = "systemctl restart qdrouterd"
-                  sleep(300);
+                  command = "ssudo ystemctl restart qdrouterd"
+                  sleep(300000);
                   executeCommand(command);
 
               break
               case SHUTDOWN1_10:
                   logger.info("Going to execute stop command after 60 seconds")
-                  command = "systemctl stop qdrouterd"
-                  sleep(60);
+                  command = "sudo systemctl stop qdrouterd"
+                  sleep(60000);
                   executeCommand(command);
                   logger.info("Going to execute start command after 10 seconds")
-                  sleep(10)
-                  command = "systemctl start qdrouterd"
+                  sleep(10000)
+                  command = "sudo systemctl start qdrouterd"
                   executeCommand(command);
 
               break
               case SHUTDOWN3_30:
                   logger.info("Going to execute stop command after 180 seconds")
-                  command = "systemctl stop qdrouterd"
-                  sleep(180);
+                  command = "sudo systemctl stop qdrouterd"
+                  sleep(180000);
                   executeCommand(command);
                   logger.info("Going to execute start command after 30 seconds")
-                  sleep(30)
-                  command = "systemctl start qdrouterd"
+                  sleep(30000)
+                  command = "sudo systemctl start qdrouterd"
                   executeCommand(command);
 
               break
               case SHUTDOWN5_60:
                   logger.info("Going to execute stop command after 300 seconds")
-                  command = "systemctl stop qdrouterd"
-                  sleep(300);
+                  command = "sudo systemctl stop qdrouterd"
+                  sleep(300000);
                   executeCommand(command);
                   logger.info("Going to execute start command after 60 seconds")
-                  sleep(60)
-                  command = "systemctl start qdrouterd"
+                  sleep(60000)
+                  command = "sudo systemctl start qdrouterd"
                   executeCommand(command);
 
               break
